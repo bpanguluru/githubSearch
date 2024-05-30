@@ -6,6 +6,10 @@ $page_no = 1;
 $continue = true;
 $reposlist = [];
 
+$fork = $_GET['fork'] ?? '';
+$stars = $_GET['stars'] ?? '';
+$size = $_GET['size'] ?? '';
+
 do {
     // max 100 per page
     $url = "https://api.github.com/users/$username/repos?per_page=100&page=$page_no";
@@ -39,7 +43,13 @@ do {
     if (count($data) == 0) {
         $continue = false;
     } else {
-        $reposlist = array_merge($reposlist, $data);
+        foreach ($data as $repo) {
+            if (($fork === 'true' && $repo['fork'] === false) || ($fork === 'false' && $repo['fork'] === true)) continue;
+            if (!empty($stars) && $repo['stargazers_count'] < $stars) continue;
+            if (!empty($size) && $repo['size'] < $size) continue;
+
+            $reposlist[] = $repo; // Add repo to list if it passes filters
+        }
         $page_no++;
     }
 

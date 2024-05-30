@@ -69,6 +69,26 @@
         </div>
         <div class="card-body">
           <input type="text" id="username" placeholder="Enter GitHub Username">
+          <!-- dropdowns -->
+          <Select id="forkFilter">
+            <option value="">All Repositories</option>
+            <option value="true">Only Forks</option>
+            <option value="false">No Forks</option>
+          </select>
+
+          <select id="starFilter">
+            <option value="">Any Stars</option>
+            <option value="1">More than 1 Star</option>
+            <option value="10">More than 10 Stars</option>
+            <option value="50">More than 20 Stars</option>
+          </select>
+
+          <select id="sizeFilter">
+            <option value="">Any Size</option>
+            <option value="1000">Larger than 1MB</option>
+            <option value="10000">Larger than 10MB</option>
+          </select>
+
           <button onclick="fetchUserStats()">Search</button>
           <div id="errorMessage" class="error">Must enter a username</div>
           <div id="errorAPI" class="error">No user found</div>
@@ -84,9 +104,12 @@
 <script>
   
   function fetchUserStats() {
-    // take usrename from input field and make a GET req for hte php with query params
+    // take usrename and filters from input field and make a GET req for hte php with query params
     var usernametxt = document.getElementById('username').value;
-    var backendURL = 'APIEndpointNew.php?username=' + usernametxt;
+    var forkFilter = document.getElementById('forkFilter').value;
+    var starFilter = document.getElementById('starFilter').value;
+    var sizeFilter = document.getElementById('sizeFilter').value;
+    var backendURL = `APIEndpointNew.php?username=${encodeURIComponent(usernametxt)}&fork=${encodeURIComponent(forkFilter)}&stars=${encodeURIComponent(starFilter)}&size=${encodeURIComponent(sizeFilter)}`;
     
     if (usernametxt.trim() === '') {
         document.getElementById('errorMessage').style.display = 'block';
